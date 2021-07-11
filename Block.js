@@ -5,7 +5,7 @@ export default class Block {
 	constructor(previousHash, data, proof) {
 		this.previousHash = previousHash;
 		this.data = data;
-		this.proof = proof
+		this.proof = proof;
 
 		console.log(`\tNew Block!! ${JSON.stringify(this)}`);
 	}

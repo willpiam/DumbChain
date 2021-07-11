@@ -11,15 +11,18 @@ import { HARDNESS} from './Settings.js';
 
 class Minor {
 
-
 	constructor (data, chain) {
 		this.data = data;
 		this.chain = chain;
 	}
 
 	// if we can't save this data in this block we have to mine the next one and save the data in that
-	async saveToChain() {
-		while (! await this.chain.add(this.data)) ;
+	async saveToChain(delay = 0) {
+		while (! await this.chain.add(this.data)) {
+
+			if (delay > 0)
+				await new Promise(r => setTimeout(r, delay));
+		};
 	}
 
 }
@@ -44,13 +47,13 @@ async function Main() {
 				// compeeting to mine same block
 				await Promise.all(
 					[
-						new Minor({ val: "A" }, chain).saveToChain(),
-						new Minor({ val: "B" }, chain).saveToChain(),
-						new Minor({ val: "C" }, chain).saveToChain(),
-						new Minor({ val: "D" }, chain).saveToChain(),
-						new Minor({ val: "E" }, chain).saveToChain(),
-						new Minor({ val: "F" }, chain).saveToChain(),
-						new Minor({ val: "G"}, chain).saveToChain(),
+						new Minor({ val: "A" }, chain).saveToChain(10),
+						new Minor({ val: "B" }, chain).saveToChain(9),
+						new Minor({ val: "C" }, chain).saveToChain(8),
+						new Minor({ val: "D" }, chain).saveToChain(7),
+						new Minor({ val: "E" }, chain).saveToChain(6),
+						new Minor({ val: "F" }, chain).saveToChain(5),
+						new Minor({ val: "G"}, chain).saveToChain(4),
 						new Minor({ val: "H" }, chain).saveToChain(),
 					]
 				);

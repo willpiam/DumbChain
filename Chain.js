@@ -2,10 +2,15 @@ import { hash } from './hash.js'
 import Block from './Block.js';
 import { HARDNESS } from './Settings.js';
 
+	function GetZeros (_nzeros) {
+				return "".padStart(_nzeros, "0");
+	}
+
+
 export default class Chain {
 
 	constructor(genesisHash) {
-		this.blocks = [new Block(genesisHash, {}, 1)];
+		this.blocks = [new Block(genesisHash, {val: 'banks suck'}, {solution: 128, full: 821})];
 	}
 
 	getLatestBlock() {
@@ -28,19 +33,30 @@ export default class Chain {
 		 *
 		 * */
 		async function NaiveApproch(_this, _proof) {
+			console.log(`checking proof: ${_proof}`);
 			const myproof = await _this.proofOfWork(_this.getLatestBlock().getProof());
 			if (_proof == myproof) 
 				return true;
 			return false;
 		}
 
-		return await NaiveApproch(this, _proof);
+		async function ProperApproch (_this, _proof) {
+console.log(_proof);
+			const hashOp = hash((Math.pow(_proof.solution, 2) - Math.pow(_this.getLatestBlock().getProof().solution, 2)).toString(16));
+
+			if (hashOp.substring(0, HARDNESS) === GetZeros(HARDNESS))
+				return true;
+			return false;
+		}
+
+		//return await NaiveApproch(this, _proof.solution);
+		return await ProperApproch(this, _proof);
 	}
 
 	async acceptBlock(prvHsh, data, proof) {
 
 		if (prvHsh === this.getLatestBlock().getHash()) {
-
+console.log(`\t\t\tblock yet to be mind`);
 			// This block has (probably) not yet been blocked
 
 			if (await this.checkProof(proof)) {
@@ -84,18 +100,26 @@ export default class Chain {
 
 	async proofOfWork (prevProof) {
 		const startTime = new Date().getTime();
-		let newProof = 1;
+		let newProof = Math.floor(Math.random() * 99999);
 		let checkProof = false;
+		let full = '';
 
 		do {
-			const hashOp = hash((Math.pow(newProof, 2) - Math.pow(prevProof, 2)).toString(16));
-			const numZeros = HARDNESS;
 
-			function GetZeros (_nzeros) {
-				return "".padStart(_nzeros, "0");
+			// check prev proof is still up to date
+			// if not submit a bad block so we can contine
+			if (prevProof !== this.getLatestBlock().getProof() ){
+				console.log(`\tto late`);
+				return false;
+//				checkProof = true;
+
 			}
 
+			const hashOp = hash((Math.pow(newProof, 2) - Math.pow(prevProof.solution, 2)).toString(16));
+			const numZeros = HARDNESS;
+
 			if (hashOp.substring(0, numZeros) === GetZeros(numZeros)) {
+				full = hashOp;
 				checkProof = true;
 			}
 			else {
@@ -105,17 +129,19 @@ export default class Chain {
 
 		} while (checkProof === false);
 
+		console.log('proof found');
+
 		const endTime = new Date().getTime();
 		console.log(`Blook time was ${endTime - startTime} ms`);
-		return newProof;
+		return {solution: newProof, full: full} ;
 
 	}
 
 	async mineBlock() {
 		const prevProof =  this.getLatestBlock().getProof();
 		const prevHash =  this.getLatestBlock().getHash();
-
-		return await this.proofOfWork(prevProof);
+		const proofOrFail = await this.proofOfWork(prevProof);
+		return (typeof proofOrFail === 'string') ? false:proofOrFail;
 	}
 
 	/*
@@ -123,6 +149,8 @@ export default class Chain {
 	 * */
 	async add(data) {
 		const proof = await this.mineBlock();
+		if (proof === false)
+			return false;
 		const success = this.acceptBlock(
 			this.blocks[this.blocks.length - 1].getHash(),
 			data,
@@ -138,8 +166,8 @@ export default class Chain {
 
 	print() {
 		console.log(`block hash\tprevious hash`);
-		this.blocks.forEach(block => console.log(`${hash(JSON.stringify(block))}\t${block.previousHash}`))
-		this.blocks.forEach(block => console.table({block, proof: block.proof, prevHash: block.getPrevHash(), data: block.data, }));
+		this.blocks.forEach(block => console.log(`${hash(JSON.stringify(block))}\t${block.previousHash}\t${JSON.stringify(block.data)}`))
+	//	this.blocks.forEach(block => console.table({block, proof: block.proof, prevHash: block.getPrevHash(), data: block.data, }));
 	}
 }
 
