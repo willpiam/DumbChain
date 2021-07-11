@@ -35,9 +35,21 @@ export default class Chain {
 
 				// proof matches ours 
 
-				this.blocks.push(new Block(prvHsh, data, proof));
-				// return true to indicate success to caller
-				return true;
+				// LOCK THE ARRAY
+				/*?how?*/
+
+
+				// check that this prvHsh still matches hash of most recent block
+				if (prvHsh == this.getLatestBlock().getHash()) {
+					this.blocks.push(new Block(prvHsh, data, proof));
+					// return true to indicate success to caller
+					return true;
+				}
+				else {
+					console.log(`COULD NOT WRITE BLOCK. THIS BLOCK HAS ALREADY BEEN MINED`);
+						`);
+					return false;
+				}
 
 			}
 			else {
