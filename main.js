@@ -15,13 +15,9 @@ async function Main() {
 	const genesisHash = hash(genesisPhrase);
 	console.log(`Genesis hash: ${genesisHash}`);
 
-	// make chain
 	const chain = new Chain(genesisHash);
 
 	const test = 'a';
-
-
-//	await chain.add({ val: "this is only a test"	});
 
 	switch (test) {
 		case 'a':
@@ -37,6 +33,9 @@ async function Main() {
 						new Miner({ val: "F" }, chain).saveToChain(5),
 						new Miner({ val: "G"}, chain).saveToChain(4),
 						new Miner({ val: "H" }, chain).saveToChain(),
+						new Miner({ val: "William Was Here" }, chain).saveToChain(),
+						new Miner({ val: "Bitcoin 4ever" }, chain).saveToChain(),
+						new Miner({ val: "should we make a token" }, chain).saveToChain(),
 					]
 				);
 				break;
