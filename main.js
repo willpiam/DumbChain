@@ -6,8 +6,23 @@ import { HARDNESS} from './Settings.js';
 /*	Goals 
  *		[]	Have mining agents
  *		[]	Have multithreaded mining agents 
- *
+ *		[]	Thread lock to ensure the same block is never mined twice
  * */
+
+class Minor {
+
+
+	constructor (data, chain) {
+		this.data = data;
+		this.chain = chain;
+	}
+
+	// if we can't save this data in this block we have to mine the next one and save the data in that
+	async saveToChain() {
+		while (! await this.chain.add(this.data)) ;
+	}
+
+}
 
 
 async function Main() {
@@ -29,6 +44,23 @@ async function Main() {
 				// compeeting to mine same block
 				await Promise.all(
 					[
+						new Minor({ val: "A" }, chain).saveToChain(),
+						new Minor({ val: "B this is a message" }, chain).saveToChain(),
+						new Minor({ val: "C send 533 to 0x7w384g" }, chain).saveToChain(),
+						new Minor({ val: "D" }, chain).saveToChain(),
+						new Minor({ val: "E" }, chain).saveToChain(),
+						new Minor({ val: "F" }, chain).saveToChain(),
+						new Minor({ val: "G is a letter 2." }, chain).saveToChain(),
+						new Minor({ val: "H" }, chain).saveToChain(),
+					]
+				);
+				break;
+			}
+		case 'a_old':
+			{
+				// compeeting to mine same block
+				await Promise.all(
+					[
 						chain.add({ val: "A" }),
 						chain.add({ val: "B this is a message" }),
 						chain.add({ val: "C send 533 to 0x7w384g" }),
@@ -41,6 +73,7 @@ async function Main() {
 				);
 				break;
 			}
+
 		case 'b':
 			{
 				// one after the other

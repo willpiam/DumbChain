@@ -121,6 +121,7 @@ export default class Chain {
 			data,
 			proof,
 		);
+		return success;
 	//	this.blocks.push(new Block(
 	//		this.blocks[this.blocks.length - 1].getHash(),
 	//		data,
