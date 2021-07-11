@@ -1,8 +1,7 @@
 import { hash } from './hash.js'
 import Block from './Block.js';
+import { HARDNESS } from './Settings.js';
 
-
-const HARDNESS = 2;
 export default class Chain {
 
 	constructor(genesisHash) {
@@ -14,7 +13,6 @@ export default class Chain {
 	}
 
 	async acceptBlock(prvHsh, data, proof) {
-
 
 		if (prvHsh === this.getLatestBlock().getHash()) {
 

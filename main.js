@@ -1,6 +1,7 @@
 import { hash } from './hash.js'
 import Block from './Block.js';
 import Chain from './Chain.js';
+import { HARDNESS } from './Settings.js';
 
 /*	Goals 
  *		[]	Have mining agents
@@ -8,7 +9,6 @@ import Chain from './Chain.js';
  *
  * */
 
-const HARDNESS = 2;
 
 async function Main() {
 	const genesisPhrase = "What is love?";
