@@ -47,7 +47,6 @@ export default class Chain {
 				}
 				else {
 					console.log(`COULD NOT WRITE BLOCK. THIS BLOCK HAS ALREADY BEEN MINED`);
-						`);
 					return false;
 				}
 

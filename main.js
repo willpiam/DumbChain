@@ -18,7 +18,7 @@ async function Main() {
 	// make chain
 	const chain = new Chain(genesisHash);
 
-	const test = 'c';
+	const test = 'a';
 
 
 //	await chain.add({ val: "this is only a test"	});
@@ -26,6 +26,7 @@ async function Main() {
 	switch (test) {
 		case 'a':
 			{
+				// compeeting to mine same block
 				await Promise.all(
 					[
 						chain.add({ val: "A" }),
@@ -42,6 +43,7 @@ async function Main() {
 			}
 		case 'b':
 			{
+				// one after the other
 				await chain.add({ val: "A" });
 				await chain.add({ val: "B" });
 				await chain.add({ val: "C" });
@@ -55,6 +57,7 @@ async function Main() {
 
 		case 'c':
 			{
+				// combitition beteen two miners
 
 				await Promise.race([ chain.add({val: 'a'}),	 chain.add({ val: "WDD WAZ HERE" })]) ;
 				await Promise.race([ chain.add({val: 'a'}),	 chain.add({ val: "hellooooo" })]);
