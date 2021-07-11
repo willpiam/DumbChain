@@ -18,7 +18,10 @@ async function Main() {
 	// make chain
 	const chain = new Chain(genesisHash);
 
-	const test = 'd';
+	const test = 'c';
+
+
+//	await chain.add({ val: "this is only a test"	});
 
 	switch (test) {
 		case 'a':

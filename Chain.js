@@ -34,6 +34,9 @@ export default class Chain {
 			if (await checkProof(proof)) {
 
 				// proof matches ours 
+
+				this.blocks.push(new Block(prvHsh, data, proof));
+				// return true to indicate success to caller
 				return true;
 
 			}
