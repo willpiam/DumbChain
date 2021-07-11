@@ -1,70 +1,57 @@
-const crypto = require('crypto');
+import { hash } from './hash.js'
+import Block from './Block.js';
+import Chain from './Chain.js';
 
-class Block {
+/*	Goals 
+ *		[]	Have mining agents
+ *		[]	Have multithreaded mining agents 
+ *
+ * */
 
-	constructor(previousHash, data) {
-		this.previousHash = previousHash;
-		this.data = data;
-	}
+const HARDNESS = 2;
 
-	getHash() {
-		return hash(JSON.stringify(this));
-	}
-
-	getData() {
-		return this.data;
-	}
-}
-
-class Chain {
-
-	constructor(genesisHash) {
-		this.blocks = [new Block(genesisHash, {})];
-	}
-
-	verify() {
-		for (let i = 1; i < this.blocks.length; i++)
-			if (this.blocks[i].previousHash !== this.blocks[i - 1].getHash())
-				return false;
-		return true;
-	}
-
-	add(data) {
-		this.blocks.push(new Block(this.blocks[this.blocks.length - 1].getHash(), data));
-	}
-
-	// simulate trying to add a bad block
-	add_BAD(data) {
-		this.blocks.push(new Block('thisISaBADhashVALUE', data));
-	}
-
-	print() {
-		console.log(`block hash\tprevious hash`);
-		this.blocks.forEach(block => console.log(`${hash(JSON.stringify(block))}\t${block.previousHash}`))
-	}
-}
-
-function hash(str) {
-	return crypto.createHash('sha1').update(str).digest('hex');
-}
-
-function Main() {
+async function Main() {
 	const genesisPhrase = "What is love?";
 	const genesisHash = hash(genesisPhrase);
 	console.log(`Genesis hash: ${genesisHash}`);
 
 	// make chain
 	const chain = new Chain(genesisHash);
-	chain.add({ val: "WDD WAZ HERE" });
-	chain.add({ val: "hellooooo" });
-	chain.add({ val: "hellooooo" });
-	chain.add({ val: "hellooooo" });
-	chain.add({ val: "hellooooo" });
-	chain.add({ val: "hellooooo" });
-	chain.add({ val: "hellooooo" });
-	chain.add({ val: "hellooooo" });
+	/*	await Promise.all(
+		[
+		chain.add({ val: "A" }),
+		chain.add({ val: "B" }),
+		chain.add({ val: "C" }),
+		chain.add({ val: "D" }),
+		chain.add({ val: "E" }),
+		chain.add({ val: "F" }),
+		chain.add({ val: "G" }),
+		chain.add({ val: "H" }),
+		]
+	);
 
-	chain.add_BAD({ val: "hellooooo" });
+*/
+		await chain.add({ val: "A" });
+		await chain.add({ val: "B" });
+		await chain.add({ val: "C" });
+		await chain.add({ val: "D" });
+		await chain.add({ val: "E" });
+		await chain.add({ val: "F" });
+		await chain.add({ val: "G" });
+		await chain.add({ val: "H" });
+	
+
+	/*
+	await Promise.race([ chain.add({val: 'a'}),	 chain.add({ val: "WDD WAZ HERE" })]) ;
+	await Promise.race([ chain.add({val: 'a'}),	 chain.add({ val: "hellooooo" })]);
+	await Promise.race([ chain.add({val: 'a'}),	 chain.add({ val: "hwefooooo" })]);
+	await Promise.race([ chain.add({val: 'a'}),	 chain.add({ val: "hellsdfoo" })]);
+	await Promise.race([ chain.add({val: 'a'}),	 chain.add({ val: "helloooss" })]);
+	await Promise.race([ chain.add({val: 'a'}),	 chain.add({ val: "dsfsooooo" })]);
+	await Promise.race([ chain.add({val: 'a'}),	 chain.add({ val: "hellsdfoo" })]);
+	await Promise.race([ chain.add({val: 'a'}),	 chain.add({ val: "hellooofghi"})]);
+	*/
+	//chain.add_BAD({ val: "hellooooo" });
 
 	chain.print();
 
