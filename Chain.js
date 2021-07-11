@@ -12,44 +12,51 @@ export default class Chain {
 		return this.blocks[this.blocks.length - 1];
 	}
 
+	async checkProof (_proof) {
+
+		/*	NaiveApproch()
+		 *	Description: The naive approch to proof checking
+		 *		STEPS:
+		 *			- Take proof
+		 *			- Do entire proof
+		 *			- compare provided proof with the proof we did
+		 *		THE PROBLEM:
+		 *			It takes just as much work to check a proof as it does to generate a proof
+		 *	
+		 *	William Doyle
+		 *	July 11th 2021
+		 *
+		 * */
+		async function NaiveApproch(_this, _proof) {
+			const myproof = await _this.proofOfWork(_this.getLatestBlock().getProof());
+			if (_proof == myproof) 
+				return true;
+			return false;
+		}
+
+		return await NaiveApproch(this, _proof);
+	}
+
 	async acceptBlock(prvHsh, data, proof) {
 
 		if (prvHsh === this.getLatestBlock().getHash()) {
 
 			// This block has (probably) not yet been blocked
 
-			// check proof
-			async function checkProof (_proof) {
-
-				// 1. do proof
-				// 2. check our proof against their proof
-				// 3. a) if their's matches ours then it is correct. 
-				return true;
-
-				// 3. b) otherwise
-				return false;
-
-			}
-
-			if (await checkProof(proof)) {
-
-				// proof matches ours 
+			if (await this.checkProof(proof)) {
 
 				// LOCK THE ARRAY
 				/*?how?*/
-
-
 				// check that this prvHsh still matches hash of most recent block
 				if (prvHsh == this.getLatestBlock().getHash()) {
 					this.blocks.push(new Block(prvHsh, data, proof));
-					// return true to indicate success to caller
+					console.log(`\tPoW accepted. You're block has been added.`);
 					return true;
 				}
 				else {
 					console.log(`COULD NOT WRITE BLOCK. THIS BLOCK HAS ALREADY BEEN MINED`);
 					return false;
 				}
-
 			}
 			else {
 				console.log(`invlid proof. Block should be regected.`);
