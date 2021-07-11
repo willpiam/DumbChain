@@ -9,7 +9,7 @@ import { HARDNESS} from './Settings.js';
  *		[]	Thread lock to ensure the same block is never mined twice
  * */
 
-class Minor {
+class Miner {
 
 	constructor (data, chain) {
 		this.data = data;
@@ -26,7 +26,6 @@ class Minor {
 	}
 
 }
-
 
 async function Main() {
 	const genesisPhrase = "What is love?";
@@ -47,14 +46,14 @@ async function Main() {
 				// compeeting to mine same block
 				await Promise.all(
 					[
-						new Minor({ val: "A" }, chain).saveToChain(10),
-						new Minor({ val: "B" }, chain).saveToChain(9),
-						new Minor({ val: "C" }, chain).saveToChain(8),
-						new Minor({ val: "D" }, chain).saveToChain(7),
-						new Minor({ val: "E" }, chain).saveToChain(6),
-						new Minor({ val: "F" }, chain).saveToChain(5),
-						new Minor({ val: "G"}, chain).saveToChain(4),
-						new Minor({ val: "H" }, chain).saveToChain(),
+						new Miner({ val: "A" }, chain).saveToChain(10),
+						new Miner({ val: "B" }, chain).saveToChain(9),
+						new Miner({ val: "C" }, chain).saveToChain(8),
+						new Miner({ val: "D" }, chain).saveToChain(7),
+						new Miner({ val: "E" }, chain).saveToChain(6),
+						new Miner({ val: "F" }, chain).saveToChain(5),
+						new Miner({ val: "G"}, chain).saveToChain(4),
+						new Miner({ val: "H" }, chain).saveToChain(),
 					]
 				);
 				break;
