@@ -45,12 +45,12 @@ async function Main() {
 				await Promise.all(
 					[
 						new Minor({ val: "A" }, chain).saveToChain(),
-						new Minor({ val: "B this is a message" }, chain).saveToChain(),
-						new Minor({ val: "C send 533 to 0x7w384g" }, chain).saveToChain(),
+						new Minor({ val: "B" }, chain).saveToChain(),
+						new Minor({ val: "C" }, chain).saveToChain(),
 						new Minor({ val: "D" }, chain).saveToChain(),
 						new Minor({ val: "E" }, chain).saveToChain(),
 						new Minor({ val: "F" }, chain).saveToChain(),
-						new Minor({ val: "G is a letter 2." }, chain).saveToChain(),
+						new Minor({ val: "G"}, chain).saveToChain(),
 						new Minor({ val: "H" }, chain).saveToChain(),
 					]
 				);

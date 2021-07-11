@@ -1,1 +1,1 @@
-export const HARDNESS = 2;
+export const HARDNESS = 4;
