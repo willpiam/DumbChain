@@ -2,30 +2,13 @@ import { hash } from './hash.js'
 import Block from './Block.js';
 import Chain from './Chain.js';
 import { HARDNESS} from './Settings.js';
+import Miner from './Miner.js';
 
 /*	Goals 
  *		[]	Have mining agents
  *		[]	Have multithreaded mining agents 
  *		[]	Thread lock to ensure the same block is never mined twice
  * */
-
-class Miner {
-
-	constructor (data, chain) {
-		this.data = data;
-		this.chain = chain;
-	}
-
-	// if we can't save this data in this block we have to mine the next one and save the data in that
-	async saveToChain(delay = 0) {
-		while (! await this.chain.add(this.data)) {
-
-			if (delay > 0)
-				await new Promise(r => setTimeout(r, delay));
-		};
-	}
-
-}
 
 async function Main() {
 	const genesisPhrase = "What is love?";
