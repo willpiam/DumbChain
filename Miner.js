@@ -16,8 +16,7 @@ export default class Miner {
 			const hashOp = hash((Math.pow(newProof, 2) - Math.pow(prevProof.solution, 2)).toString(16));
 
 			if (hashOp.substring(0, HARDNESS) === GetZeros(HARDNESS)) {
-				const endTime = new Date().getTime();
-				console.log(`Blook time was ${endTime - startTime} ms`);
+				console.log(`Blook time was ${new Date().getTime() - startTime} ms`);
 				return {solution: newProof, full: hashOp};
 			}
 		}
