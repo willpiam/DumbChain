@@ -5,7 +5,7 @@ import { HARDNESS} from './Settings.js';
 import Miner from './Miner.js';
 
 /*	Goals 
- *		[]	Have mining agents
+ *		[x]	Have mining agents
  *		[]	Have multithreaded mining agents 
  *		[]	Thread lock to ensure the same block is never mined twice
  * */
@@ -13,12 +13,12 @@ import Miner from './Miner.js';
 async function Main() {
 	const genesisPhrase = "What is love?";
 	const genesisHash = hash(genesisPhrase);
+	
 	console.log(`Genesis hash: ${genesisHash}`);
 
 	const chain = new Chain(genesisHash);
 
 	const test = 'a';
-
 	switch (test) {
 		case 'a':
 			{

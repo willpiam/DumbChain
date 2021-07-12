@@ -7,7 +7,7 @@ export default class Block {
 		this.data = data;
 		this.proof = proof;
 
-		console.log(`\tNew Block!! ${JSON.stringify(this)}`);
+		console.log(`\tNew Block!! ${JSON.stringify(this.proof)}`);
 	}
 
 	getHash() {

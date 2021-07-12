@@ -32,20 +32,15 @@ export default class Miner {
 				checkProof = true;
 				break;
 			}
-			else {
+			else 
 				newProof += 1;
-			}
 
 			if (prevProof !== this.chain.getLatestBlock().getProof() ){
 				console.log(`\tto late.....`);
 				return "block already mined";
 			}
 
-
-
 		} while (checkProof === false);
-
-	//	console.log('proof found');
 
 		const endTime = new Date().getTime();
 		console.log(`Blook time was ${endTime - startTime} ms`);
@@ -55,14 +50,29 @@ export default class Miner {
 
 
 	async saveToChain(delay = 0) {
-		const theProof = await this.proofOfWork(this.chain.getLatestBlock().getProof());
-		if (! await this.chain.add(this.data, theProof))
-			await this.saveToChain();
-	//	while (! await this.chain.add(this.data, theProof)) {
-//			console.log(`BLOCK went to someone else`);
-	//		if (delay > 0)
-	//			await new Promise(r => setTimeout(r, delay));
-//		};
+
+		switch ('b'){ 
+			case 'a':
+				{
+					const theProof = await Promise.race([
+						this.proofOfWork(this.chain.getLatestBlock().getProof()),
+						this.proofOfWork(this.chain.getLatestBlock().getProof()),
+					]);
+					if (! this.chain.add(this.data, theProof))
+						await this.saveToChain();
+					break;
+				}
+			case 'b': 
+				{
+					const theProof = await this.proofOfWork(this.chain.getLatestBlock().getProof());
+					if (! this.chain.add(this.data, theProof))
+						await this.saveToChain();
+					break;
+				}
+			default:
+				console.log(`unknown option`);
+				break;
+		}
 	}
 }
 
