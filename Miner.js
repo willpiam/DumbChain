@@ -9,16 +9,10 @@ export default class Miner {
 		this.chain = chain;
 	}
 
-	async mineBlock() {
-		const prevProof =  this.chain.getLatestBlock().getProof();
-		const proofOrFail = await this.proofOfWork(prevProof);
-		return (proofOrFail === false) ? false:proofOrFail;
-	}
-
 	async proofOfWork (prevProof) {
 		const startTime = new Date().getTime();
 
-		for (let newProof = Math.floor(Math.random() * 100000 ) ; ; newProof++){
+		for (let newProof = Math.floor(Math.random() * 100000 ) ; prevProof === this.chain.getLatestBlock().getProof() ; newProof++){
 			const hashOp = hash((Math.pow(newProof, 2) - Math.pow(prevProof.solution, 2)).toString(16));
 
 			if (hashOp.substring(0, HARDNESS) === GetZeros(HARDNESS)) {
@@ -26,11 +20,8 @@ export default class Miner {
 				console.log(`Blook time was ${endTime - startTime} ms`);
 				return {solution: newProof, full: hashOp};
 			}
-			if (prevProof !== this.chain.getLatestBlock().getProof() ){
-				console.log(`\tto late.....`);
-				return false;
-			}
 		}
+		return false;
 	}
 
 	async saveToChain(delay = 0) {
@@ -49,6 +40,12 @@ export default class Miner {
 			case 'b': 
 				{
 					const theProof = await this.proofOfWork(this.chain.getLatestBlock().getProof());
+
+					if (theProof === false) {
+						console.log('bad proof -- out of sync with chain');
+						await this.saveToChain();
+					}
+					
 					if (! this.chain.add(this.data, theProof))
 						await this.saveToChain();
 					break;
