@@ -12,42 +12,26 @@ export default class Miner {
 	async mineBlock() {
 		const prevProof =  this.chain.getLatestBlock().getProof();
 		const proofOrFail = await this.proofOfWork(prevProof);
-		return (typeof proofOrFail === 'string') ? false:proofOrFail;
+		return (proofOrFail === false) ? false:proofOrFail;
 	}
 
 	async proofOfWork (prevProof) {
 		const startTime = new Date().getTime();
 
-		const COEFF = Math.random() * 0.5 ;
-
-		let newProof = Math.floor(Math.random() * (Number.MAX_SAFE_INTEGER * COEFF) );
-		let checkProof = false;
-		let full = '';
-
-		do {
+		for (let newProof = Math.floor(Math.random() * 100000 ) ; ; newProof++){
 			const hashOp = hash((Math.pow(newProof, 2) - Math.pow(prevProof.solution, 2)).toString(16));
 
 			if (hashOp.substring(0, HARDNESS) === GetZeros(HARDNESS)) {
-				full = hashOp;
-				checkProof = true;
-				break;
+				const endTime = new Date().getTime();
+				console.log(`Blook time was ${endTime - startTime} ms`);
+				return {solution: newProof, full: hashOp};
 			}
-			else 
-				newProof += 1;
-
 			if (prevProof !== this.chain.getLatestBlock().getProof() ){
 				console.log(`\tto late.....`);
-				return "block already mined";
+				return false;
 			}
-
-		} while (checkProof === false);
-
-		const endTime = new Date().getTime();
-		console.log(`Blook time was ${endTime - startTime} ms`);
-		return {solution: newProof, full: full} ;
+		}
 	}
-
-
 
 	async saveToChain(delay = 0) {
 
