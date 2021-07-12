@@ -12,14 +12,20 @@ export default class Miner {
 	async proofOfWork (prevProof) {
 		const startTime = new Date().getTime();
 
-		for (let newProof = Math.floor(Math.random() * 100000 ) ; prevProof === this.chain.getLatestBlock().getProof() ; newProof++){
-			const hashOp = hash((Math.pow(newProof, 2) - Math.pow(prevProof.solution, 2)).toString(16));
+		for (
+			let nonce = Math.floor(Math.random() * 100000 ) ; 
+			prevProof === this.chain.getLatestBlock().getProof() ;
+			nonce++
+		){
+			const hashOp = hash((Math.pow(nonce, 2) - Math.pow(prevProof.solution, 2)).toString(16));
 
 			if (hashOp.substring(0, HARDNESS) === GetZeros(HARDNESS)) {
-				console.log(`Blook time was ${new Date().getTime() - startTime} ms`);
-				return {solution: newProof, full: hashOp};
+				console.log(`STUB:: Blook time was ${new Date().getTime() - startTime} ms`);
+				return {solution: nonce, full: hashOp};
 			}
 		}
+
+		// prevProf is out of date... someone else was faster to mine this block
 		return false;
 	}
 
@@ -50,7 +56,7 @@ export default class Miner {
 					break;
 				}
 			default:
-				console.log(`unknown option`);
+				throw new Error ('Unknown option');
 				break;
 		}
 	}
